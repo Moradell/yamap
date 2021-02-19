@@ -142,8 +142,3 @@ function addHint() {
   myMap.geoObjects.add(myPlacemark);
 }
 
-document.body.addEventListener('click', function (event) {
-  if (event.target.className === 'hintBtn') {
-    formValidate(form);
-  }
-})

@@ -6,10 +6,34 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="./css/main.css">
 </head>
 
 <body>
 
+  <div id="map">
+  </div>
+
+  <div id="modal">
+    <!-- <ul class="modal-list" id="list"></ul> -->
+    <hr id="line" noshade size="1px">
+    <button class="modal__close">
+      X
+    </button>
+    <div class="modal__contant">
+      <h3 class="modal__title">Отзыв:</h3>
+      <form action="#" class="modal__form" id="reviewForm">
+        <input type="text" placeholder="Укажите ваше имя" id="name" class="modal__form-input _req">
+        <input type="text" placeholder="Укажите место" id="place" class="modal__form-input _req">
+        <textarea id="review" placeholder="Оставить отзыв" class="modal__form-review _req"></textarea>
+        <button type="submit" class="btn">Добавить</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=f70cb8de-8161-47a4-8529-c8b7b1659319&lang=ru_RU"
+    type="text/javascript"></script>
+  <script src="./scripts/main.js"></script>
 </body>
 
 </html>

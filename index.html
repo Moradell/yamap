@@ -14,22 +14,24 @@
   <div id="map">
   </div>
 
-  <div id="modal">
-    <!-- <ul class="modal-list" id="list"></ul> -->
-    <hr id="line" noshade size="1px">
-    <button class="modal__close">
-      X
-    </button>
-    <div class="modal__contant">
+  <script type="template" id="addFormTemlate">
+    <div class="review-list"></div>
+    <div class="form" data-role="review-form">
       <h3 class="modal__title">Отзыв:</h3>
-      <form action="#" class="modal__form" id="reviewForm">
-        <input type="text" placeholder="Укажите ваше имя" id="name" class="modal__form-input _req">
-        <input type="text" placeholder="Укажите место" id="place" class="modal__form-input _req">
-        <textarea id="review" placeholder="Оставить отзыв" class="modal__form-review _req"></textarea>
-        <button type="submit" class="btn">Добавить</button>
-      </form>
+      <div class="field">
+        <input type="text" placeholder="Укажите ваше имя" class="modal__form-input _req" data-role="review-name">
+      </div>
+      <div class="field">
+        <input type="text" placeholder="Укажите место" class="modal__form-input _req" data-role="review-place">
+      </div>
+      <div class="field">
+        <textarea placeholder="Оставить отзыв" class="modal__form-review _req" data-role="review-text"></textarea>
+      </div>
+
+       <button type="submit" class="btn" data-role="review-add">Добавить</button>
+       <span class="form-error"></span>
     </div>
-  </div>
+  </script>
 
   <script src="https://api-maps.yandex.ru/2.1/?apikey=f70cb8de-8161-47a4-8529-c8b7b1659319&lang=ru_RU"
     type="text/javascript"></script>

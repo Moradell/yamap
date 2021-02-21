@@ -1,9 +1,13 @@
 let myMap;
 let coords;
-let storage = localStorage;
-let li = document.createElement('li');
-const formTemlate = document.querySelector('#addFormTemlate').innerHTML;
-const btn = document.querySelector('#btn');
+let objectId = 0;
+let reviews = [];
+const formTemlate = document.getElementById('reviewForm');
+const modal = document.getElementById('modal');
+const userName = document.getElementById('name');
+const place = document.getElementById('place');
+const review = document.getElementById('review');
+const STORAGE_KEY = 'reviews_content';
 
 ymaps.ready(init);
 
@@ -12,73 +16,95 @@ function init() {
     center: [55.76, 37.64],
     zoom: 10
   });
+
+  const reviews = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  for (const item of reviews) {
+    myMap.geoObjects.add(new ymaps.Placemark(item.coords));
+  }
+
+  objectManager = new ymaps.ObjectManager({
+    clusterize: true,
+    gridSize: 32,
+    clusterDisableClickZoom: true
+  });
+
+  myMap.geoObjects.add(objectManager);
+
   addListeners();
 }
 
 function addListeners() {
   myMap.events.add('click', function (event) {
     coords = event.get('coords');
-    onClick(coords);
-    clickOnBtn();
+    showModal(event);
   });
-}
 
-function onClick(coords) {
-  const form = this.createForm(coords);
-  openBalloon(coords, form.innerHTML);
-}
+  objectManager.objects.events.add('click', (event) => onObjectEvent(event));
+  objectManager.clusters.events.add('click', (event) => onClusterEvent(event));
 
-function openBalloon(coords, content) {
-  myMap.balloon.open(coords, content);
-}
-
-function setBalloonContent(content) {
-  myMap.balloon.setData(content);
-}
-
-function closeBalloon() {
-  myMap.balloon.close();
-}
-
-function createForm(coords) {
-  const root = document.createElement('div');
-  root.innerHTML = formTemlate;
-  const reviewList = root.querySelector('.review-list');
-  const reviewForm = root.querySelector('[data-role=review-form]');
-  reviewForm.dataset.coords = JSON.stringify(coords);
-
-  return root;
-}
-
-function createPlacemark(coords) {
-  const placemark = new ymaps.Placemark(coords, {
-    balloonContentHeader: '',
-    balloonContentBody: createForm(coords).outerHTML
-  });
-  myMap.geoObjects.add(placemark);
-
-  // placemark.events.add('click', function () {
-  //   console.log(123456)
-  // })
-}
-
-function clickOnBtn() {
-  document.body.addEventListener('click', function (e) {
-    if (e.target.dataset.role === 'review-add') {
-      createPlacemark(coords);
-
-      const reviewForm = document.querySelector('[data-role=review-form]');
-      const coord = JSON.parse(reviewForm.dataset.coords);
-      const data = {
-        coord,
-        name: document.querySelector('[data-role=review-name]').value,
-        place: document.querySelector('[data-role=review-place]').value,
-        text: document.querySelector('[data-role=review-text]').value,
-      };
-      const value = JSON.stringify(data)
-      storage.setItem(coord, value);
-
-      closeBalloon();
-    }
+  const form = document.getElementById('reviewForm');
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    createPlacemark();
+    clearInputs();
+    closeModal();
   })
+}
+
+function clearInputs() {
+  userName.value = '';
+  place.value = '';
+  review.value = '';
+}
+
+function onObjectEvent(event) {
+  const objectId = event.get('objectId');
+  showModal(event);
+}
+
+function onClusterEvent(event) {
+
+}
+
+function showModal(event) {
+  let posY = event.getSourceEvent().originalEvent.domEvent.originalEvent.clientY;
+  let posX = event.getSourceEvent().originalEvent.domEvent.originalEvent.clientX;
+  modal.style.display = 'block';
+  modal.style.left = `${posX}px`;
+  modal.style.top = `${posY}px`;
+}
+
+function closeModal() {
+  modal.style.display = 'none';
+}
+
+function createPlacemark() {
+  let featuresObj = {
+    'type': 'Feature',
+    'id': objectId,
+    'geometry': {
+      'type': 'Point',
+      'coordinates': coords
+    },
+    'properties': {
+      hintContent: place.value,
+    }
+  };
+
+  reviews.push({
+    objectId: objectId,
+    name: userName.value,
+    place: place.value,
+    review: review.value,
+    coords: coords
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+
+  objectManager.add({
+    'type': 'FeatureCollection',
+    'features': [featuresObj]
+  });
+
+  objectId++;
 }

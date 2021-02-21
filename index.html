@@ -14,24 +14,27 @@
   <div id="map">
   </div>
 
-  <script type="template" id="addFormTemlate">
-    <div class="review-list"></div>
-    <div class="form" data-role="review-form">
+  <div id="modal">
+    <div class="review-list" id="reviewList">
+
+    </div>
+    <form class="form" id="reviewForm">
       <h3 class="modal__title">Отзыв:</h3>
       <div class="field">
-        <input type="text" placeholder="Укажите ваше имя" class="modal__form-input _req" data-role="review-name">
+        <input type="text" placeholder="Укажите ваше имя" class="modal__form-input _req" id="name">
       </div>
       <div class="field">
-        <input type="text" placeholder="Укажите место" class="modal__form-input _req" data-role="review-place">
+        <input type="text" placeholder="Укажите место" class="modal__form-input _req" id="place">
       </div>
       <div class="field">
-        <textarea placeholder="Оставить отзыв" class="modal__form-review _req" data-role="review-text"></textarea>
+        <textarea placeholder="Оставить отзыв" class="modal__form-review _req" id="review"></textarea>
       </div>
 
-       <button type="submit" class="btn" data-role="review-add">Добавить</button>
-       <span class="form-error"></span>
-    </div>
-  </script>
+      <button type="submit" class="btn">Добавить</button>
+      <span class="form-error"></span>
+    </form>
+  </div>
+
 
   <script src="https://api-maps.yandex.ru/2.1/?apikey=f70cb8de-8161-47a4-8529-c8b7b1659319&lang=ru_RU"
     type="text/javascript"></script>

@@ -7,6 +7,7 @@ const modal = document.getElementById('modal');
 const userName = document.getElementById('name');
 const place = document.getElementById('place');
 const review = document.getElementById('review');
+const closeBtn = document.getElementById('closeBtn');
 const STORAGE_KEY = 'reviews_content';
 
 ymaps.ready(init);
@@ -62,6 +63,7 @@ function init() {
 function addListeners() {
   myMap.events.add('click', function (event) {
     coords = event.get('coords');
+    delRev();
     showModal(event);
   });
 
@@ -85,11 +87,7 @@ function clearInputs() {
 
 function onObjectEvent(event) {
   const objectId = event.get('objectId');
-  console.log(objectId)
-  const reviewItem = document.getElementById("reviewItem")
-  if (reviewItem) {
-    reviewItem.remove();
-  }
+  delRev();
   showModal(event);
   updateReviews(objectId);
 }
@@ -142,15 +140,31 @@ function createPlacemark() {
 }
 
 function updateReviews(objectId) {
+  let date = new Date();
+  const year = (date.getFullYear());
+  const mounth = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = (date.getDate()).toString().padStart(2, '0');
+  const newDate = day + '.' + mounth + '.' + year;
   const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
   const reviewList = document.getElementById('reviewList');
   const reviewItem = document.createElement('div');
   reviewItem.setAttribute('id', 'reviewItem');
   reviewItem.innerHTML = `
   <div>
-      <b>${storage[objectId].name}</b> [${storage[objectId].place}]
+      <b>${storage[objectId].name}</b> ${storage[objectId].place} ${newDate}
     </div>
     <div>${storage[objectId].review}</div>
   `;
   reviewList.appendChild(reviewItem);
 }
+
+function delRev() {
+  const reviewItem = document.getElementById("reviewItem")
+  if (reviewItem) {
+    reviewItem.remove();
+  }
+}
+
+closeBtn.addEventListener('click', function () {
+  closeModal();
+})

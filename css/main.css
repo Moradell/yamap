@@ -32,7 +32,7 @@ ul li {
 #modal {
   display: none;
   position: absolute;
-  width: 353px;
+  width: 340px;
   min-height: 339px;
   background-color: #fff;
   padding: 29px 17px 0 17px;
@@ -55,8 +55,8 @@ ul li {
   height: 30px;
   width: 30px;
   font-size: 25px;
-  right: 10px;
-  top: 2px;
+  right: 5px;
+  top: 5px;
   border: none;
   background: #fff;
   cursor: pointer;
@@ -153,8 +153,8 @@ ul li {
   color: #000;
 }
 
-#line {
-  display: none;
+#reviewItem {
+  margin-bottom: 15px;
 }
 
 /* .popup {

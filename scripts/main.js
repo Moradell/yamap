@@ -17,11 +17,6 @@ function init() {
     zoom: 10
   });
 
-  const reviews = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  for (const item of reviews) {
-    myMap.geoObjects.add(new ymaps.Placemark(item.coords));
-  }
-
   objectManager = new ymaps.ObjectManager({
     clusterize: true,
     gridSize: 32,
@@ -30,6 +25,37 @@ function init() {
 
   myMap.geoObjects.add(objectManager);
 
+  const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (storage) {
+    Array.from(storage).forEach((item, index) => {
+      let featuresObj = {
+        'type': 'Feature',
+        'id': index,
+        'geometry': {
+          'type': 'Point',
+          'coordinates': item.coords
+        },
+        'properties': {
+          hintContent: place.value,
+        }
+      };
+
+      reviews.push({
+        objectId: index,
+        name: item.name,
+        place: item.place,
+        review: item.review,
+        coords: item.coords
+      });
+
+      objectManager.add({
+        'type': 'FeatureCollection',
+        'features': [featuresObj]
+      });
+
+      objectId++;
+    })
+  }
   addListeners();
 }
 
@@ -59,7 +85,13 @@ function clearInputs() {
 
 function onObjectEvent(event) {
   const objectId = event.get('objectId');
+  console.log(objectId)
+  const reviewItem = document.getElementById("reviewItem")
+  if (reviewItem) {
+    reviewItem.remove();
+  }
   showModal(event);
+  updateReviews(objectId);
 }
 
 function onClusterEvent(event) {
@@ -107,4 +139,18 @@ function createPlacemark() {
   });
 
   objectId++;
+}
+
+function updateReviews(objectId) {
+  const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  const reviewList = document.getElementById('reviewList');
+  const reviewItem = document.createElement('div');
+  reviewItem.setAttribute('id', 'reviewItem');
+  reviewItem.innerHTML = `
+  <div>
+      <b>${storage[objectId].name}</b> [${storage[objectId].place}]
+    </div>
+    <div>${storage[objectId].review}</div>
+  `;
+  reviewList.appendChild(reviewItem);
 }

@@ -140,18 +140,15 @@ function createPlacemark() {
 }
 
 function updateReviews(objectId) {
-  let date = new Date();
-  const year = (date.getFullYear());
-  const mounth = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = (date.getDate()).toString().padStart(2, '0');
-  const newDate = day + '.' + mounth + '.' + year;
+  let nowDate = new Date();
+  let dateNow = nowDate.getDate().toString().padStart(2, '0') + '.' + (nowDate.getMonth() + 1).toString().padStart(2, '0') + '.' + nowDate.getFullYear();
   const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
   const reviewList = document.getElementById('reviewList');
   const reviewItem = document.createElement('div');
   reviewItem.setAttribute('id', 'reviewItem');
   reviewItem.innerHTML = `
   <div>
-      <b>${storage[objectId].name}</b> ${storage[objectId].place} ${newDate}
+      <b>${storage[objectId].name}</b> ${storage[objectId].place} ${dateNow}
     </div>
     <div>${storage[objectId].review}</div>
   `;

@@ -157,6 +157,24 @@ ul li {
   margin-bottom: 15px;
 }
 
+.balloon-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 165px;
+}
+
+/* .ballon_header {
+}
+
+.ballon_body {
+} */
+
+/* .balloon-footer {
+  margin-top: 15px;
+} */
+
 /* .popup {
   position: fixed;
   width: 100%;

@@ -18,31 +18,44 @@ function init() {
     zoom: 10
   });
 
+  let customItemContentLayout = ymaps.templateLayoutFactory.createClass(
+    '<div class=balloon-content>' +
+    '<h2 class=balloon-header>{{ properties.balloonContentHeader|raw }}</h2>' +
+    '<div class=balloon-body>{{ properties.balloonContentBody|raw }}</div>' +
+    '<div class=balloon-footer>{{ properties.balloonContentFooter|raw }}</div>' +
+    '</div>'
+  );
+
   objectManager = new ymaps.ObjectManager({
     clusterize: true,
-    gridSize: 32,
-    clusterDisableClickZoom: true
+    clusterBalloonItemContentLayout: customItemContentLayout,
+    geoObjectOpenBalloonOnClick: false,
+    clusterOpenBalloonOnClick: true,
+    clusterDisableClickZoom: true,
+    clusterBalloonContentLayout: 'cluster#balloonCarousel',
   });
 
   myMap.geoObjects.add(objectManager);
 
   const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
   if (storage) {
-    Array.from(storage).forEach((item, index) => {
+    Array.from(storage).forEach((item) => {
       let featuresObj = {
-        'type': 'Feature',
-        'id': index,
-        'geometry': {
-          'type': 'Point',
-          'coordinates': item.coords
+        type: 'Feature',
+        id: item.objectId,
+        geometry: {
+          type: 'Point',
+          coordinates: item.coords
         },
-        'properties': {
-          hintContent: place.value,
+        properties: {
+          'balloonContentHeader': `${item.place}`,
+          'balloonContentBody': `${item.review}`,
+          'balloonContentFooter': `${item.name} ${new Date().toLocaleDateString()}`,
         }
       };
 
       reviews.push({
-        objectId: index,
+        objectId: item.objectId,
         name: item.name,
         place: item.place,
         review: item.review,
@@ -87,6 +100,7 @@ function clearInputs() {
 
 function onObjectEvent(event) {
   const objectId = event.get('objectId');
+  console.log(objectId)
   delRev();
   showModal(event);
   updateReviews(objectId);
@@ -110,14 +124,16 @@ function closeModal() {
 
 function createPlacemark() {
   let featuresObj = {
-    'type': 'Feature',
-    'id': objectId,
-    'geometry': {
-      'type': 'Point',
-      'coordinates': coords
+    type: 'Feature',
+    id: objectId,
+    geometry: {
+      type: 'Point',
+      coordinates: coords
     },
-    'properties': {
-      hintContent: place.value,
+    properties: {
+      'balloonContentHeader': `${place.value}`,
+      'balloonContentBody': `${review.value}`,
+      'balloonContentFooter': `${userName.value} ${new Date().toLocaleDateString()}`,
     }
   };
 

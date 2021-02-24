@@ -69,6 +69,7 @@ function init() {
 
       objectId++;
     })
+    // objectId = Math.max.apply(Math, storage.map(function (e) { return e.objectId; }));
   }
   addListeners();
 }
@@ -80,16 +81,14 @@ function addListeners() {
     showModal(event);
   });
 
-  objectManager.objects.events.add('click', (event) => onObjectEvent(event));
-  objectManager.clusters.events.add('click', (event) => onClusterEvent(event));
-
   const form = document.getElementById('reviewForm');
   form.addEventListener('submit', function (event) {
     event.preventDefault();
-    createPlacemark();
-    clearInputs();
-    closeModal();
-  })
+    formValidate();
+  });
+
+  objectManager.objects.events.add('click', (event) => onObjectEvent(event));
+  objectManager.clusters.events.add('click', (event) => onClusterEvent(event));
 }
 
 function clearInputs() {
@@ -100,7 +99,6 @@ function clearInputs() {
 
 function onObjectEvent(event) {
   const objectId = event.get('objectId');
-  console.log(objectId)
   delRev();
   showModal(event);
   updateReviews(objectId);
@@ -181,3 +179,32 @@ function delRev() {
 closeBtn.addEventListener('click', function () {
   closeModal();
 })
+
+function formValidate() {
+  let error = 0;
+  let formReq = document.querySelectorAll('._req');
+
+  for (let i = 0; i < formReq.length; i++) {
+    const input = formReq[i];
+    formRemoveError(input);
+
+    if (input.value === '') {
+      formAddError(input);
+      error++;
+    }
+  }
+
+  if (error === 0) {
+    createPlacemark();
+    clearInputs();
+    closeModal();
+  }
+}
+
+function formAddError(input) {
+  input.classList.add('_error');
+}
+
+function formRemoveError(input) {
+  input.classList.remove('_error');
+}

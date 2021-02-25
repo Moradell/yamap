@@ -99,6 +99,7 @@ function clearInputs() {
 
 function onObjectEvent(event) {
   const objectId = event.get('objectId');
+  coords = reviews[objectId].coords;
   showModal(event);
   updateReviews(objectId);
 }
@@ -154,8 +155,7 @@ function createPlacemark() {
 }
 
 function updateReviews(objectId) {
-  let nowDate = new Date();
-  let dateNow = nowDate.getDate().toString().padStart(2, '0') + '.' + (nowDate.getMonth() + 1).toString().padStart(2, '0') + '.' + nowDate.getFullYear();
+  let dateNow = new Date().toLocaleDateString();
   const storage = reviews.find(x => x.objectId === objectId);
   if (!storage && !storage.review) {
     return;

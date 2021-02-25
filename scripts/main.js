@@ -99,7 +99,6 @@ function clearInputs() {
 
 function onObjectEvent(event) {
   const objectId = event.get('objectId');
-  delRev();
   showModal(event);
   updateReviews(objectId);
 }
@@ -109,6 +108,7 @@ function onClusterEvent(event) {
 }
 
 function showModal(event) {
+  delRev();
   let posY = event.getSourceEvent().originalEvent.domEvent.originalEvent.clientY;
   let posX = event.getSourceEvent().originalEvent.domEvent.originalEvent.clientX;
   modal.style.display = 'block';
@@ -156,15 +156,18 @@ function createPlacemark() {
 function updateReviews(objectId) {
   let nowDate = new Date();
   let dateNow = nowDate.getDate().toString().padStart(2, '0') + '.' + (nowDate.getMonth() + 1).toString().padStart(2, '0') + '.' + nowDate.getFullYear();
-  const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  const storage = reviews.find(x => x.objectId === objectId);
+  if (!storage && !storage.review) {
+    return;
+  }
   const reviewList = document.getElementById('reviewList');
   const reviewItem = document.createElement('div');
   reviewItem.setAttribute('id', 'reviewItem');
   reviewItem.innerHTML = `
   <div>
-      <b>${storage[objectId].name}</b> ${storage[objectId].place} ${dateNow}
+      <b>${storage.name}</b> ${storage.place} ${dateNow}
     </div>
-    <div>${storage[objectId].review}</div>
+    <div>${storage.review}</div>
   `;
   reviewList.appendChild(reviewItem);
 }
@@ -173,6 +176,11 @@ function delRev() {
   const reviewItem = document.getElementById("reviewItem")
   if (reviewItem) {
     reviewItem.remove();
+  }
+  let formReq = document.querySelectorAll('._req');
+  for (let i = 0; i < formReq.length; i++) {
+    const input = formReq[i];
+    formRemoveError(input);
   }
 }
 

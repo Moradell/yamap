@@ -50,7 +50,7 @@ function init() {
         properties: {
           'balloonContentHeader': `${item.place}`,
           'balloonContentBody': `${item.review}`,
-          'balloonContentFooter': `${item.name} ${new Date().toLocaleDateString()}`,
+          'balloonContentFooter': `${item.name} ${item.date}`,
         }
       };
 
@@ -59,6 +59,7 @@ function init() {
         name: item.name,
         place: item.place,
         review: item.review,
+        date: item.date,
         coords: item.coords
       });
 
@@ -141,6 +142,7 @@ function createPlacemark() {
     name: userName.value,
     place: place.value,
     review: review.value,
+    date: new Date().toLocaleDateString(),
     coords: coords
   });
 
@@ -155,7 +157,7 @@ function createPlacemark() {
 }
 
 function updateReviews(objectId) {
-  let dateNow = new Date().toLocaleDateString();
+  // let dateNow = new Date().toLocaleDateString();
   const storage = reviews.find(x => x.objectId === objectId);
   if (!storage && !storage.review) {
     return;
@@ -165,7 +167,7 @@ function updateReviews(objectId) {
   reviewItem.setAttribute('id', 'reviewItem');
   reviewItem.innerHTML = `
   <div>
-      <b>${storage.name}</b> ${storage.place} ${dateNow}
+      <b>${storage.name}</b> ${storage.place} ${storage.date}
     </div>
     <div>${storage.review}</div>
   `;
